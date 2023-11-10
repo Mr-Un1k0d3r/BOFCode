@@ -1,0 +1,11 @@
+alias getcmdline {
+	local('$barch $handle $data $args');
+	$barch  = barch($1);
+	$handle = openf(script_resource("getcmdline. $+ $barch $+ .o"));
+	$data   = readb($handle, -1);
+	closef($handle);
+
+	btask($1, "Running getcmdline. $+ $barch $+ .o against:  $+ $2 $+ ");
+	$args   = bof_pack($1, "z", $2);
+	beacon_inline_execute($1, $data, "go", $args);
+}
