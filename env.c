@@ -15,9 +15,13 @@ FARPROC Resolver(CHAR *lib, CHAR *func) {
 VOID go() {
 	FARPROC GetEnvironmentStrings = Resolver("kernel32.dll", "GetEnvironmentStrings");
 	FARPROC strlen = Resolver("msvcrt.dll", "strlen");
+	FARPROC FreeEnvironmentStrings = Resolver("kernel32.dll", "FreeEnvironmentStringsA");
     LPCH env = GetEnvironmentStrings();
+	LPCH start = env;
     while(env[0] != 0x00) {
         printf("%s\n", env);
         env += strlen(env) + 1;
     }
+	
+	FreeEnvironmentStrings(start);
 }
