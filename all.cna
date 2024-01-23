@@ -20,3 +20,15 @@ alias envdump {
 	btask($1, "Running envdump. $+ $barch $+ .o");
 	beacon_inline_execute($1, $data, "go");
 }
+
+alias createproc {
+	local('$barch $handle $data $args');
+	$barch  = barch($1);
+	$handle = openf(script_resource("process. $+ $barch $+ .o"));
+	$data   = readb($handle, -1);
+	closef($handle);
+
+	btask($1, "Running process. $+ $barch $+ .o against:  $+ $2 $+ ");
+	$args   = bof_pack($1, "z", $2);
+	beacon_inline_execute($1, $data, "go", $args);
+}
