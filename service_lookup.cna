@@ -1,0 +1,17 @@
+alias servicelookup {
+	local('$barch $handle $args $data $host $service $domain $username $password');
+	$barch  = barch($1);
+	$handle = openf(script_resource("service_lookup. $+ $barch $+ .o"));
+	$data   = readb($handle, -1);
+	closef($handle);
+	
+	$host = iff(-istrue $2, $2, "");
+	$service = iff(-istrue $3, $3, "");
+	$domain = iff(-istrue $4, $4, "");
+	$username = iff(-istrue $5, $5, "");
+	$password = iff(-istrue $6, $6, "");
+
+	btask($1, "Running service_lookup. $+ $barch $+ .o against  $+ $host $+  looking for  $+ $service $+ .");
+	$args = bof_pack($1, "zzzzz", $host, $service, $domain, $username, $password);
+	beacon_inline_execute($1, $data, "go", $args);
+}
